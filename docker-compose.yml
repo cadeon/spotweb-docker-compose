@@ -1,10 +1,10 @@
 version: "2.1"
 services:
-  database:
+  db:
     # command: --skip-grant-tables
     image: mariadb
-    ports:
-      - "${SQL_PORT:-127.0.0.1:13306}:3306"
+    # ports:
+    #   - "${SQL_PORT:-127.0.0.1:13306}:3306"
     stop_grace_period: 45s
     environment:
       - TZ=${TZ}
@@ -23,7 +23,7 @@ services:
 
   web:
     depends_on:
-    - "database"
+    - db
     build: .
     environment:
       - TZ=${TZ}
