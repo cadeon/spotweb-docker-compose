@@ -1,0 +1,59 @@
+version: "2.1"
+services:
+  database:
+    # command: --skip-grant-tables
+    image: mariadb
+    ports:
+      - "${SQL_PORT:-127.0.0.1:13306}:3306"
+    stop_grace_period: 45s
+    environment:
+      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=${DBROOT}
+      # - MYSQL_USER=${DBUSER}
+      # - MYSQL_PASSWORD=${DBPASS}
+      - MYSQL_INITDB_SKIP_TZINFO=1
+    volumes:
+        - mysql-vol-1:/var/lib/mysql/
+        - mysql-socket-vol-1:/var/run/mysqld/
+    restart: always
+    networks:
+      spotweb-network:
+        aliases:
+          - mysql
+
+  web:
+    depends_on:
+    - "database"
+    build: .
+    environment:
+      - TZ=${TZ}
+      - SPOTWEB_DB_TYPE=pdo_mysql
+      - SPOTWEB_DB_HOST=mysql
+      - SPOTWEB_DB_NAME=${DBNAME}
+      - SPOTWEB_DB_USER=${DBUSER}
+      - SPOTWEB_DB_PASS=${DBPASS}
+      - SPOTWEB_CRON_RETRIEVE=*/15 * * * *
+      - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
+    ports:
+      - 80:80
+    volumes:
+      - spotweb-cache-vol:/var/www/html/spotweb/cache
+      - mysql-socket-vol-1:/var/run/mysqld/
+      - ./data/config:/config
+    restart: always
+    networks:
+      spotweb-network:
+        aliases:
+          - phpfpm
+
+
+networks:
+  spotweb-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-spotweb
+
+volumes:
+  mysql-vol-1:
+  mysql-socket-vol-1:
+  spotweb-cache-vol:
