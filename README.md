@@ -1,5 +1,5 @@
 # spotweb-docker-compose
-Everything you need to run SpotWeb. Simply type `docker-compose build &amp;&amp; docker-compose up -d`
+Everything you need to run SpotWeb with docker-compose (including a work MySQL instance). Simply type `docker-compose build && docker-compose up -d` after copying over the `.env` file from the `.env.sample` file (with a new set of `DBROOT` and `DBPASS` passwords of course :) ).
 
 
 # Original SpotWeb image/ Dockerfile/ entrypoint.sh
