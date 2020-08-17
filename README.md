@@ -1,5 +1,5 @@
 # spotweb-docker-compose
-Everything you need to run SpotWeb. Simply type `docker-compose build &amp;&amp; docker-compose up -d`
+Everything you need to run SpotWeb. Simply type `docker-compose build && docker-compose up -d`
 
 
 # Original SpotWeb image/ Dockerfile/ entrypoint.sh
